@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [products, setProducts] = useState([
+  const [products, setProducts] = useState(JSON.parse(localStorage.getItem("products")) || [
     {
       id: 1,
       name: "Laptop",
@@ -15,7 +15,7 @@ function App() {
     },
   ]);
 
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(JSON.parse(localStorage.getItem("cart")) ||[]);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
 
@@ -43,11 +43,22 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
+
   function handleIncrease(Product) {
     setCart(
       cart.map((item) =>
         item.id === Product.id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? { 
+            ...item, 
+            quantity: item.quantity + 1 
+            }
           : item,
       ),
     );
